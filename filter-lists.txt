@@ -1,0 +1,35 @@
+# uBlock Origin Lite - filter lists (verified 2026-10-21)
+# Dashboard -> Filter lists -> 'Import filter lists' -> paste these URLs
+
+uBlock filters
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt
+uBlock mobile
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-mobile.txt
+uBlock quick-fixes
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/quick-fixes.txt
+uBlock annoyances
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances.txt
+uBlock privacy
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt
+uBlock badware
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt
+uBlock unbreak
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt
+uBlock link-shorteners
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/ubo-link-shorteners.txt
+uBOL filters
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/ubol-filters.txt
+AdGuard Base
+https://filters.adtidy.org/extension/ublock/filters/2.txt
+AdGuard Mobile
+https://filters.adtidy.org/extension/ublock/filters/3.txt
+AdGuard Annoyances
+https://filters.adtidy.org/extension/ublock/filters/14.txt
+AdGuard URL tracking
+https://filters.adtidy.org/extension/ublock/filters/11.txt
+Fanboy Annoyance
+https://secure.fanboy.co.nz/fanboy-annoyance.txt
+Fanboy Social
+https://secure.fanboy.co.nz/fanboy-social.txt
+Peter Lowe adservers
+https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext

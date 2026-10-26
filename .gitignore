@@ -1,0 +1,30 @@
+# ===== Never upload: browser profiles (cookies / login data) =====
+profile-lite/
+profile-snapshot-*/
+profile-backup-*/
+
+# ===== Never upload: browser binaries =====
+cft-chrome/
+
+# ===== Build output (rebuild with src/make-mv3.windows-patched.sh) =====
+uBOLite.chromium/
+uBOLite_vaft/
+uBOLite_adhider/
+
+# ===== Release archives (fetch upstream / rebuild instead) =====
+*.zip
+
+# ===== Python =====
+__pycache__/
+*.pyc
+
+# ===== Logs / runtime artifacts =====
+*.log
+log.txt
+matched-rules.html
+
+# ===== OS / IDE =====
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

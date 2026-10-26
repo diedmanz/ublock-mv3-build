@@ -1,0 +1,42 @@
+{
+  "version": "2026.1021.638",
+  "filteringModes": {
+    "none": [],
+    "basic": [],
+    "optimal": [],
+    "complete": [
+      "all-urls"
+    ]
+  },
+  "customFilters": [
+    [
+      "animegojos.com",
+      [
+        "#ads-rot",
+        "#adst",
+        "#bt-ads",
+        "#bt-ads-mini",
+        "#bt-ads-mini2",
+        ".bannerrow",
+        "img.banner"
+      ]
+    ],
+    [
+      "hubserieshds.com",
+      [
+        "#ads-rot",
+        "#adst",
+        "#bt-ads",
+        "#bt-ads-mini",
+        "#bt-ads-mini2",
+        ".bannerrow",
+        "img.banner"
+      ]
+    ]
+  ],
+  "sandboxFilters": [
+    "twitch.tv##+js(twitch-videoad)",
+    "*##+js(ad-hider)",
+    "*##+js(ad-gate-skip)"
+  ]
+}

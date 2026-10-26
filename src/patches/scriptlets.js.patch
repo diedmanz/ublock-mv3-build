@@ -1,0 +1,19 @@
+--- a/js/resources/scriptlets.js	2026-10-21 10:14:48.418861000 +0700
++++ b/js/resources/scriptlets.js	2026-10-21 16:41:46.408205700 +0700
+@@ -21,6 +21,8 @@
+ */
+ 
+ import './abort-current-script.js';
++import './ad-hider.js';
++import './ad-gate-skip.js';
+ import './attribute.js';
+ import './create-html.js';
+ import './href-sanitizer.js';
+@@ -38,6 +40,7 @@
+ import './prevent-settimeout.js';
+ import './replace-argument.js';
+ import './spoof-css.js';
++import './twitch-videoad.js';
+ import './vod.js';
+ 
+ import {

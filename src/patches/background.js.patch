@@ -1,0 +1,15 @@
+--- a/js/background.js	2026-10-21 10:14:48.155914900 +0700
++++ b/js/background.js	2026-10-21 16:41:47.308068300 +0700
+@@ -776,6 +776,12 @@
+         deferredTasks.add('registerUserScripts');
+     }
+ 
++    // Always (re)register the user scripts when a session starts. The
++    // conditions above are never met when the extension is loaded from the
++    // command line (--load-extension), because that path never fires
++    // onInstalled, which left the sandbox scriptlets unregistered.
++    deferredTasks.add('registerUserScripts');
++
+     // Cosmetic filtering-related content scripts cache fitlering data in
+     // session storage.
+     sessionAccessLevel({ accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS' });

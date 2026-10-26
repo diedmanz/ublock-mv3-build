@@ -1,0 +1,44 @@
+! uBlock Origin Lite — custom cosmetic filters
+! Thai drama/anime streaming sites sharing the "bt-ads" ad template
+!
+! HOW TO USE
+!   uBOLite dashboard -> "Custom filters" page -> paste the selector block
+!   for the site you want (one CSS selector per line), then save.
+!
+!   Do NOT paste these into the "Filter-creation sandbox" page: that page
+!   expects uBlock filter syntax (##, ##+js(), ...) and rejects raw CSS.
+!
+! VERIFIED 2026-10-21 with uBOLite 2026.1021.336 on Chrome 155:
+!   animegojos.com     -> ad nodes visible: 0   (content intact: 72 episode links)
+!   hubserieshds.com   -> ad nodes visible: 0   (content intact)
+!
+! ---------------------------------------------------------------------------
+! WHY NETWORK BLOCKING CANNOT DO THIS
+!   The banner images are served from the SAME origin as the content
+!   (/banner/*.webp, /banner/*.jpg) and only the <a href> points at the ad
+!   network (h.anccplayer.cyou, ibit.ly/... gambling redirects).
+!   Blocking those URLs would break the site itself, so only cosmetic
+!   filtering (display:none) is the correct mechanism here.
+! ---------------------------------------------------------------------------
+
+! ===== animegojos.com =====
+animegojos.com
+#bt-ads
+#bt-ads-mini
+#bt-ads-mini2
+#ads-rot
+img.banner
+.bannerrow
+
+! ===== hubserieshds.com =====
+hubserieshds.com
+#bt-ads
+#bt-ads-mini
+#bt-ads-mini2
+#ads-rot
+img.banner
+bannerrow
+
+! ===== twitch.tv — vaft scriptlet (bundled in the custom uBOLite build) =====
+twitch.tv
+twitch.tv##+js(twitch-videoad)

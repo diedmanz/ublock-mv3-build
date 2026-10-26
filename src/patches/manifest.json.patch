@@ -1,0 +1,11 @@
+--- a/manifest.json	2026-10-21 10:14:49.148451200 +0700
++++ b/manifest.json	2026-10-21 16:42:02.962383700 +0700
+@@ -335,7 +335,7 @@
+   "storage": {
+     "managed_schema": "managed_storage.json"
+   },
+-  "version": "2026.1021.304",
++  "version": "2026.1021.941",
+   "web_accessible_resources": [
+     {
+       "resources": [

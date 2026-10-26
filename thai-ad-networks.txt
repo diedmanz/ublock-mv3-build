@@ -1,0 +1,9 @@
+! Title: Thai streaming / movie ad networks
+! Purpose: block the ad network that serves the video roll-in (pre-roll)
+! and the ad creatives on the Thai movie sites.
+!   googles.video  - serves the .mp4 ad video shown before the movie
+!   publisher.adsok.co - ad script injected on 037-hdd
+!   v8movie.com   - poster / pop-up creatives of the same network
+||googles.video^
+||adsok.co^
+||v8movie.com^

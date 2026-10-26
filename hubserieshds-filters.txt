@@ -1,0 +1,54 @@
+# uBlock Origin Lite — custom filters for hubserieshds.com
+#
+# HOW TO USE (uBOLite)
+#   Dashboard -> "Custom filters" page -> paste the selectors for the site
+#   (one CSS selector per line). uBOL stores them per-hostname and injects
+#   them with `display:none !important`.
+#
+#   Do NOT paste these into the "Filter-creation sandbox" page — that page
+#   expects uBlock filter syntax (##, ##+js(), ...) and will reject raw
+#   CSS selectors.
+#
+# VERIFIED on https://hubserieshds.com/ with uBOLite 2026.1021.336:
+#   #bt-ads, #bt-ads-mini, #ads-rot  ->  display:none, 0x0 (hidden)
+#
+# ---------------------------------------------------------------------------
+
+# --- Floating ad containers (verified hidden) -------------------------------
+# Bottom banner 1905x193, z-index 1001, contains #ads-rot
+#bt-ads
+# Right-side mini ad 90x98
+#bt-ads-mini
+# Second mini ad (referenced by the site's own close handler)
+#bt-ads-mini2
+# Rotating banner inside #bt-ads
+#ads-rot
+
+# --- In-page ad images -----------------------------------------------------
+# These <img> are served from the SAME origin (/banner/*.webp) but link out to
+# ad domains (e.g. ibit.ly/...). Same-origin delivery is exactly why a network
+# blocker (DNR) cannot touch them - only cosmetic filtering can.
+#img.banner
+
+# --- Optional: the whole ad region ----------------------------------------
+# #banner is 1300x2542 and contains only the ad images; .bannerrow is its
+# 1300x2522 sibling. Enable these two only if you are sure you want the whole
+# area gone - verify with the element picker first.
+# #banner
+# .bannerrow
+
+
+# ===========================================================================
+# EQUIVALENT in uBlock filter syntax (for the "Filter-creation sandbox" page
+# or for full uBO / Edge). uBOL's sandbox accepts uBO syntax:
+#
+#   hubserieshds.com##^#bt-ads
+#   hubserieshds.com##^#bt-ads-mini
+#   hubserieshds.com##^#bt-ads-mini2
+#   hubserieshds.com##^#ads-rot
+#   hubserieshds.com##^img.banner
+#
+# NOTE: uBOL's sandbox parser REJECTS `##+#bt-ads` and `##^#bt-ads` in the
+# "##+" / "##^" forms above; use the Custom filters page (raw CSS selectors)
+# instead, or the element picker in the popup.
+# ===========================================================================
