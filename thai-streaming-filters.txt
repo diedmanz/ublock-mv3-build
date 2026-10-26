@@ -21,6 +21,12 @@
 !   filtering (display:none) is the correct mechanism here.
 ! ---------------------------------------------------------------------------
 
+! ===== 9.9nung.com — Thai movie streaming =====
+9.9nung.com
+9.9nung.com##+js(ad-hider)
+||googles.video^
+||ads-non-cache^
+
 ! ===== animegojos.com =====
 animegojos.com
 #bt-ads

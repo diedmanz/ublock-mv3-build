@@ -59,6 +59,7 @@ export function adHiderFn() {
         'ads-overlay', 'advert-container', 'ad-wrapper', 'ad-holder', 'ad-box',
         'adsbox', 'adslot', 'ad-frame', 'ad-vert', 'adzone', 'adsbygoogle',
         'header-ads', 'widget-banner', 'grid-banner', 'bannerrow',
+        'adsnon-float', 'adsplayer', 'adFallback', 'adVideo', 'adLink',
     ]);
 
     // Container names that are only meaningful in combination with a class.
@@ -69,6 +70,7 @@ export function adHiderFn() {
         'adsbygoogle', 'dfp-ad', 'advert-container', 'bannerrow', 'banner-ad',
         'ad-banner', 'header-ads', 'widget-banner', 'grid-banner',
         'ads-rotation', 'ad-rotation', 'ad-overlay', 'ads-overlay',
+        'adsnon-zone', 'ad-fallback-kicker',
     ]);
 
     // Generic names: only acted upon when the element looks like a slot.
@@ -85,14 +87,17 @@ export function adHiderFn() {
     // Container ids following the "ads_<something>" convention used by several
     // ad-serving scripts (ads_fox_bottom, ads_fix_footer, ...). The word must
     // be a separate token so that ids like "downloads" are not matched.
-    const AD_CONTAINER_ID = /(^|[-_])ads?([-_]|$)/i;
+    const AD_CONTAINER_ID = /(^|[-_])(ads?|adsnon)([-_]|$)/i;
+
+    // Container classes following the "adsnon-" or "ads-" naming pattern
+    const AD_CONTAINER_CLASS = /(^|\s)(adsnon-[a-z0-9_-]+|ads?-zone)(\s|$)/i;
 
     // Ad creatives are commonly named after the size they are served in,
     // e.g. "728x180.gif", "Redkong728x180.gif", "728x200-UFAGOOL-1503.gif".
     const AD_CREATIVE_SIZE = /(\d{3,4})\s*[x\u00d7]\s*(\d{2,4})/i;
 
     // Hosts that only ever serve advertising on the sites in question.
-    const AD_HOSTS = /(^|\.)(chokbet\.now|debetthailand\.win|betflix-4u8\.com|anccplayer\.cyou|redkong89\.cc|london45\.cc|mammoth88\.cc|ufafox88\.dev|adsterra\.[a-z]+|propellerads\.[a-z]+|hilltopads\.net|exoclick\.[a-z]+)$/i;
+    const AD_HOSTS = /(^|\.)(chokbet\.now|debetthailand\.win|betflix-4u8\.com|anccplayer\.cyou|redkong89\.cc|london45\.cc|mammoth88\.cc|ufafox88\.dev|googles\.video|adsterra\.[a-z]+|propellerads\.[a-z]+|hilltopads\.net|exoclick\.[a-z]+)$/i;
 
     // Structural content markers: if present, the element is real content.
     const CONTENT_MARKERS = 'h1, h2, h3, h4, h5, h6, article, main';
@@ -214,6 +219,8 @@ export function adHiderFn() {
             hideAdRow( el );
             return;
         }
+        const className = el.className && typeof el.className === 'string' ? el.className : '';
+        if ( className !== '' && AD_CONTAINER_CLASS.test( className ) ) { hide( el ); return; }
         const classList = el.classList;
         let strong = false;
         let generic = false;
@@ -242,6 +249,8 @@ export function adHiderFn() {
             const el = named.item( i );
             if ( el.id !== '' && STRONG_IDS.has( el.id ) ) { hide( el ); continue; }
             if ( el.id !== '' && AD_CONTAINER_ID.test( el.id ) ) { hide( el ); continue; }
+            const className = el.className && typeof el.className === 'string' ? el.className : '';
+            if ( className !== '' && AD_CONTAINER_CLASS.test( className ) ) { hide( el ); continue; }
             let strong = false;
             let generic = false;
             const classList = el.classList;
