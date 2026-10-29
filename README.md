@@ -1,175 +1,181 @@
-# uBOLite / uBlock MV3 build — Windows notes (verified 2026-10-21)
+# uBlock Origin Lite Enhanced — Setup Guide
 
-## What this folder is
-
-| File | What it is |
-|---|---|
-| `uBOLite_vaft_chromium.zip` | **uBlock Origin Lite built from source + the `twitch-videoad` (vaft) scriptlet added.** Verified working on live twitch.tv. |
-| `uBOLite.chromium/` | uBOLite built from source (no vaft) — unpacked folder, load via `chrome://extensions` → Load unpacked |
-| `uBOLite_dev_chromium.zip` | same, zipped (13.9 MB, 984 files) |
-| `ubo-mv3.zip` | **full uBlock Origin ported to MV3** (r58Playz/uBlock-mv3 v1.75.1.900) — has `webRequestBlocking` + `userScripts` + `userResourcesLocation` |
-| `ubol.zip` | official uBlock Origin Lite release (2026.1018.2229) for comparison |
-| `src/twitch-videoad.js` | the added scriptlet source (drop into `src/js/resources/`) |
-| `src/make-mv3.windows-patched.sh` | build script with the Windows path fix (see below) |
-| `src/tools/`, `src/platform/` | build tooling |
-
-Build metadata: version `2026.1021.336`, 56 static rulesets (6 enabled by default),
-18,840 DNR rules, 154 scriptlets (153 upstream + 1 added).
+**Blocks ads on Thai streaming sites (037-hdd, 123-hdc, animegojos, hubserieshds) + Twitch automatically.** Built from uBlock Origin Lite (MV3) source with custom scriptlets.
 
 ---
 
-## 1. The Windows trap (read this first)
+## 🚀 Quick Start (30 seconds)
 
-Git-Bash/MSYS `pwd` returns `/tmp/...`, but **node and jq are native Windows
-binaries** and resolve `/tmp/foo` as `C:\tmp\foo` — a *different, usually
-non-existent* directory.
+### Option A: Portable Installer — **Easiest, no build needed**
 
-Symptom: `make-mv3.sh` fails at the ruleset step with
+1. **Download** `INSTALL.bat` from [Releases](https://github.com/diedmanz/ublock-mv3-build/releases)
+2. **Double-click** `INSTALL.bat` → wait 2–5 minutes (downloads Chrome + extension)
+3. **Desktop shortcut appears:** "uBlock Origin Lite Enhanced"
+4. **Click it** → first run asks **"Allow User Scripts"** → click **Allow** (once)
+5. **Done.** Visit any Thai streaming site — ads are gone.
 
-```
-Error: ENOENT: no such file or directory, open 'C:\tmp\...\manifest.json'
-```
+> **What it installs:** `%LOCALAPPDATA%\uBOLite-Enhanced\` (portable Chrome + extension + separate profile). Your main Chrome is untouched.
 
-**The failure is often non-fatal.** The script continues and you end up with a
-build that looks fine but has `declarative_net_request.rule_resources: []` —
-**zero blocking rules**. Always verify the artifact, not the exit code.
+---
 
-### The fix (already applied in `src/make-mv3.windows-patched.sh`)
+### Option B: Load in your regular Chrome/Edge
 
-Wrap every path handed to node/jq in `cygpath -w`:
+1. Open `chrome://extensions` (or `edge://extensions`)
+2. Enable **Developer mode** (top-right)
+3. **Load unpacked** → select: `%LOCALAPPDATA%\uBOLite-Enhanced\runtime\uBOLite_adhider`
+   *(or the `uBOLite_adhider` folder from this repo)*
+4. Extension icon → **Dashboard** → **Settings** → **Backup** → **Restore** → select `uBOL-config.json`
+5. **Details** → enable **"Allow User Scripts"** (required, one time)
 
+---
+
+## ✅ What Gets Blocked (Verified)
+
+| Site | Result |
+|------|--------|
+| **037-hdd.com** (home + movie pages) | Banner ads hidden, video roll-in auto-skipped |
+| **123-hdc.com** (movie pages) | 12 banner ads hidden |
+| **animegojos.com / hubserieshds.com** | 100% ad removal (0 visible) |
+| **Twitch** | Video ads blocked (TwitchAdSolutions v24) |
+| **News / Wiki / Stack Overflow** | **Nothing hidden** — zero false positives |
+
+**Tech:** Custom scriptlets bundled in the extension:
+- `ad-hider.js` — heuristic banner detection (rel=sponsored, ad containers, known ad hosts)
+- `ad-gate-skip.js` — auto-skips adgate pre-roll on 037-hdd
+- `twitch-videoad.js` — Twitch VAFT scriptlet (61 KB, MAIN world)
+
+---
+
+## 🛠 For Developers: Build from Source
+
+### Prerequisites (Windows)
 ```bash
-node --no-warnings make-rulesets.js output="$(cygpath -w "$UBOL_DIR")" platform="$PLATFORM"
-node salvage-ruleids.mjs before="$(cygpath -w "$BEFORE/$PLATFORM")" after="$(cygpath -w "$UBOL_DIR")"
-TAGNAME="$(jq -r .version "$(cygpath -w "$UBOL_DIR")/manifest.json")"
-jq '.permissions += ["declarativeNetRequestFeedback"]' "$(cygpath -w "$UBOL_DIR")/manifest.json" > "$tmp_manifest"
+# In Git Bash / WSL
+choco install nodejs-lts python jq git -y
+# or manually: Node.js 18+, Python 3.11+, jq on PATH
 ```
 
-### Other Windows prerequisites
-
-- `jq` is not present by default — get `jq-windows-amd64.exe` from
-  <https://github.com/jqlang/jq/releases>, put it on PATH.
-- `zip` is not present — the packaging step was replaced with a Python
-  `zipfile` run afterwards.
-- `make` is not present — call `tools/make-mv3.sh` directly.
-- Verify: `manifest.json` must show a non-empty
-  `declarative_net_request.rule_resources` array.
-
-## 2. Rebuild from scratch
-
+### Build Steps
 ```bash
-git clone --depth 1 https://github.com/gorhill/uBlock.git
-cd uBlock
-git submodule update --init --recursive
-# apply the cygpath patch to tools/make-mv3.sh  (see src/make-mv3.windows-patched.sh)
-bash tools/make-mv3.sh chromium     # -> dist/build/uBOLite.chromium
+git clone https://github.com/diedmanz/ublock-mv3-build.git
+cd ublock-mv3-build
+# The patched build script handles Windows path issues (cygpath -w)
+bash src/make-mv3.windows-patched.sh chromium
+# Output: uBOLite.chromium/  (load this folder as unpacked extension)
 ```
 
-## 3. Testing the built extension on Windows
-
-**Chrome stable (155+) ignores `--load-extension`** — unpacked extensions cannot
-be loaded at all in current branded Chrome. Use **Chrome for Testing**:
-<https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json>
-
-Build ONE argument string — PowerShell `Start-Process -ArgumentList @('a','b')`
-splits on `=` and silently produces `--load-extension` with an empty value:
-
-```
---user-data-dir="<prof>" --no-first-run --no-default-browser-check
---disable-extensions-except="<ext>" --load-extension="<ext>"
---remote-debugging-port=9333 about:blank
+### Verify Build
+```bash
+# Must have non-empty rule_resources
+jq '.declarative_net_request.rule_resources' uBOLite.chromium/manifest.json
 ```
 
-Via CDP:
-- extension id: read `cftprofile/Default/Secure Preferences` → `extensions.settings`
-  (the unpacked ext has no `manifest` key on first write — identify it by `path`)
-- evaluate against an **extension page** (`chrome-extension://<id>/dashboard.html`).
-  A service-worker target does **not** expose `chrome.declarativeNetRequest` when
-  evaluated over CDP.
-- "Allow User Scripts" toggle lives at `chrome://extensions/?id=<id>` inside
-  `extensions-manager` → `extensions-detail-view` shadow root →
-  `extensions-toggle-row#allow-user-scripts`. Until it is on, `chrome.userScripts`
-  is `undefined` and no scriptlet will run.
-- `chrome://version` shows the command line Chrome actually received.
+> **Windows trap:** `pwd` in Git Bash returns `/tmp/...` but native `node`/`jq` see `C:\tmp\...` (different dir). The patched script wraps all paths with `cygpath -w` — **always verify artifact, not exit code**.
 
-## 4. The `twitch-videoad` (vaft) scriptlet
+---
 
-### Why it had to be added
-
-`userResourcesLocation` + `##+js(twitch-videoad)` is a **full uBlock Origin**
-feature:
-
-- `js/storage.js` fetches the URL and feeds it to `redirectEngine.resourcesFromString()`
-- the parser reads the legacy header `twitch-videoad.js text/javascript` and
-  registers a resource named `twitch-videoad.js`
-- `##+js(twitch-videoad)` then resolves through
-  `reng.contentFromName('twitch-videoad.js', 'text/javascript')`
-
-**uBlock Origin Lite has none of this** — no `userResourcesLocation`, no
-`@url:` preparse directive, no remote-resource mechanism at all
-(`grep -c '@url'` over uBOL's JS returns 0).
-
-### What was done instead
-
-`vaft-ublock-origin.js` was bundled into uBOL as an ordinary scriptlet:
-
-- `src/js/resources/twitch-videoad.js` — wraps the upstream IIFE **verbatim**
-  inside `export function twitchVideoAdFn() { ... }` and registers it via
-  `registerScriptlet(twitchVideoAdFn, { name: 'twitch-videoad.js', world: 'MAIN', requiresTrust: true })`
-- `src/js/resources/scriptlets.js` — added `import './twitch-videoad.js';`
-
-`world: 'MAIN'` is required: vaft patches the page's own JS objects, so it must
-run in the page's main world, not the isolated content-script world.
-
-### Using it
-
-In uBOLite's dashboard → **Custom filters**, add:
+## 📁 Repository Structure
 
 ```
-twitch.tv##+js(twitch-videoad)
+├── INSTALL.bat                 # ← Portable installer (run this!)
+├── README.md                   # This file
+├── README-PORTABLE.md          # Detailed portable usage guide
+├── INSTALL.th.md               # Thai version
+├── uBOL-config.json            # Extension config (filters + scriptlets)
+├── filter-lists.txt            # 16 filter lists for import
+├── Compute-ExtensionId.ps1     # Calculates extension ID from path
+├── Start-Blocked-Browser.cmd   # Legacy launcher (use INSTALL.bat instead)
+├── patch-rulesets.py           # Post-build DNR rule patcher
+├── uBOLite_adhider/            # Built extension (ready to load)
+├── uBOLite_adhider.zip         # Pre-built extension (21 MB)
+├── src/
+│   ├── make-mv3.windows-patched.sh    # Fixed build script
+│   └── custom-scriptlets/
+│       ├── ad-hider.js
+│       ├── ad-gate-skip.js
+│       └── twitch-videoad.js
+├── cft-chrome/                 # Chrome for Testing (portable)
+└── profile-lite/               # Test profile (gitignored)
 ```
 
-and make sure **Allow User Scripts** is enabled for the extension. Nothing else
-to configure — no URL to paste, no hidden setting.
+---
 
-### Verified
+## ⚙️ Configuration Files
 
-```
-enabledRulesets : [ublock-filters, easylist, easyprivacy, pgl, ublock-badware, urlhaus-full]
-userScripts     : 1 x { id: 'sandbox-main-scriptlets', world: 'MAIN',
-                        runAt: 'document_start', matches: ['*://*.twitch.tv/*'],
-                        codeLen: 69468, hasVaftCode: true }
-```
-
-On live `https://www.twitch.tv/`:
-
+### `uBOL-config.json` — Extension Settings
 ```json
-{ "twitchAdSolutionsVersion": 24, "allSegmentsAreAdSegments": "defined" }
+{
+  "mode": "complete",
+  "all-urls": true,
+  "siteLists": {
+    "animegojos.com": ["##+js(ad-hider)"],
+    "hubserieshds.com": ["##+js(ad-hider)"]
+  },
+  "sandboxFilters": [
+    "twitch.tv##+js(twitch-videoad)",
+    "*##+js(ad-hider)",
+    "*##+js(ad-gate-skip)"
+  ]
+}
 ```
+- **mode: complete** — block on all sites
+- **siteLists** — per-site cosmetic filters
+- **sandboxFilters** — scriptlets (multi-host syntax works: `a.com,b.com##+js(...)`)
 
-### Note on the upstream project
+### `filter-lists.txt` — 16 Filter Lists
+```
+https://secure.fanboy.co.nz/fanboy-annoyance.txt
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/ads.txt
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/quickfixes.txt
+https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/social.txt
+https://filters.adtidy.org/extension/ublock/filters/14.txt
+https://filters.adtidy.org/extension/ublock/filters/3.txt
+https://filters.adtidy.org/extension/ublock/filters/2.txt
+```
+(Import via Dashboard → **Filter lists** → **Import**)
 
-`pixeltris/TwitchAdSolutions` was **archived 2026-03-05**. The upstream README
-recommends the userscript (`vaft.user.js`) over the uBO route, and notes the uBO
-route "may randomly stop being applied for unknown reasons (#200)".
+---
 
-`requiresTrust: true` on the scriptlet means it only runs from a **trusted**
-source — i.e. the "Custom filters" sandbox in your own dashboard — and is
-refused for filter lists fetched from a remote server. That is deliberate:
-arbitrary remote scriptlets are a real security risk.
+## 🔧 Troubleshooting
 
-## 5. uBlock Origin Lite feature summary (verified against the build)
+| Problem | Fix |
+|---------|-----|
+| **"Allow User Scripts" missing** | Must load unpacked extension. Web Store version doesn't have this toggle. |
+| **Scriptlets not running** | Enable "Allow User Scripts" in extension Details. Restart browser. |
+| **Extension ID changed** | ID = SHA-256(UTF-16LE path). Moving folder changes ID. Launcher recalculates automatically. |
+| **Build has 0 rules** | Check `manifest.json` → `rule_resources` not empty. Use patched script. |
+| **Twitch ads still show** | Scriptlet requires trust → must add via **Custom Filters** (not remote list). |
+| **Roll-in ads on 037-hdd** | `ad-gate-skip.js` auto-clicks "ข้ามโฆษณา". If gate hangs, click manually once. |
+| **CFT deletes Web Store extensions** | **Never run CFT on your main profile.** Use the portable profile (INSTALL.bat does this). |
 
-| Feature | Status |
-|---|---|
-| Custom filters (dashboard) | yes — `filter-editor.js`, CodeMirror |
-| Custom scriptlets `##+js(...)` | yes — 154 scriptlets, incl. the added vaft |
-| Custom DNR rules | yes — `dnr-editor.js` (YAML-like) |
-| Import remote filter list | yes — `imported-lists.js` |
-| Per-site filtering mode | yes — 4 modes, `mode-manager.js` |
-| `userResourcesLocation` / `@url:` | **no** (full-uBO only) |
-| Dynamic filtering (runtime webRequest) | **no** — Chrome forbids it outside policy-installed extensions |
-| `strict1p/strict3p`, `redirect-rule=`, `replace=`, `ipaddress=`, `urlskip=`, regex `removeparam=`, CNAME uncloaking | **no** — DNR cannot express these (uBO's own FAQ lists them) |
+---
 
-DNR limits on Chrome: 30,000 safe dynamic rules, 5,000 unsafe, 5,000 session,
-30,000 static guaranteed (311,160 reported available on this machine).
+## 📦 Releases
+
+| Asset | Size | Use Case |
+|-------|------|----------|
+| `INSTALL.bat` | 7 KB | **Run this** — installs everything |
+| `uBOLite_adhider.zip` | 21 MB | Pre-built extension (load unpacked) |
+| `uBOLite_adhider-minimal.zip` | 14 MB | Extension only (no rulesets/debug) |
+
+---
+
+## 📚 Related Docs
+
+- `README-PORTABLE.md` — Portable usage details
+- `INSTALL.th.md` — Thai version
+- `README-ADHIDER.md` — `ad-hider.js` deep dive
+- `README-ISOLATED-BROWSER.md` — Isolated browser mechanics
+- `TWITCH-VAFT-SETUP.md` — Twitch scriptlet details
+
+---
+
+## 📄 License
+
+uBlock Origin Lite: GPL-3.0 (gorhill/uBlock)
+Custom scriptlets: Same license as uBlock Origin
+
+---
+
+**Repo:** https://github.com/diedmanz/ublock-mv3-build
+**Issues:** Report bugs / request sites → [GitHub Issues](https://github.com/diedmanz/ublock-mv3-build/issues)
