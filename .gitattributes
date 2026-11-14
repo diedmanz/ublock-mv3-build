@@ -1,0 +1,7 @@
+# Shell scripts must stay LF: git's core.autocrlf=true on Windows would
+# otherwise check them out with CRLF and break bash ("\r: command not found").
+*.sh text eol=lf
+
+# Windows batch files must stay CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf

@@ -9,9 +9,11 @@
 | `uBOLite_dev_chromium.zip` | same, zipped (13.9 MB, 984 files) |
 | `ubo-mv3.zip` | **full uBlock Origin ported to MV3** (r58Playz/uBlock-mv3 v1.75.1.900) — has `webRequestBlocking` + `userScripts` + `userResourcesLocation` |
 | `ubol.zip` | official uBlock Origin Lite release (2026.1018.2229) for comparison |
-| `src/twitch-videoad.js` | the added scriptlet source (drop into `src/js/resources/`) |
-| `src/make-mv3.windows-patched.sh` | build script with the Windows path fix (see below) |
-| `src/tools/`, `src/platform/` | build tooling |
+| `build.sh` | **the build entry point** — clones upstream uBlock, applies this repo's overlay, builds the extension |
+| `src/make-mv3.windows-patched.sh` | build script with the Windows path fix (see below) — used by `build.sh` |
+| `src/custom-scriptlets/` | the added scriptlet sources (`ad-hider`, `ad-gate-skip`, `twitch-videoad`) |
+| `src/custom-ui/` | `register.html` kick page used by the portable launcher |
+| `src/patches/` | patches applied to the upstream tree and to the built output |
 
 Build metadata: version `2026.1021.336`, 56 static rulesets (6 enabled by default),
 18,840 DNR rules, 154 scriptlets (153 upstream + 1 added).
@@ -56,6 +58,31 @@ jq '.permissions += ["declarativeNetRequestFeedback"]' "$(cygpath -w "$UBOL_DIR"
   `declarative_net_request.rule_resources` array.
 
 ## 2. Rebuild from scratch
+
+The upstream uBlock source is **not** stored in this repo — `build.sh` clones
+it, applies this repo's overlay, and builds the extension:
+
+```bash
+git clone https://github.com/diedmanz/ublock-mv3-build.git
+cd ublock-mv3-build
+bash build.sh                 # -> ./uBOLite_adhider
+bash build.sh /path/to/out    # -> build somewhere else
+```
+
+What `build.sh` does:
+
+1. clones `gorhill/uBlock` at a pinned commit (override with `UBO_REF=`) into
+   `./.build/uBlock`, with submodules initialized
+2. copies `src/make-mv3.windows-patched.sh` over `tools/make-mv3.sh` (the
+   cygpath fix), copies `src/custom-scriptlets/*.js` into `src/js/resources/`
+   and applies `src/patches/scriptlets.js.patch`
+3. runs `bash tools/make-mv3.sh chromium`
+4. post-build: applies `src/patches/background.js.patch` to the built output,
+   copies `src/custom-ui/register.html`, runs `patch-rulesets.py`
+5. verifies the artifact (version, rule count, custom scriptlets, Thai ad
+   rules) and fails loudly if the rule count is suspiciously low
+
+Manual equivalent:
 
 ```bash
 git clone --depth 1 https://github.com/gorhill/uBlock.git

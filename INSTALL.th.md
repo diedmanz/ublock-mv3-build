@@ -60,10 +60,11 @@
    python --version
    ```
 
-3. รันสคริปต์ build ที่แก้ path Windows แล้ว:
+3. รันสคริปต์ build (มันจะ clone upstream uBlock เอง แล้ว build):
    ```bash
-   bash src/make-mv3.windows-patched.sh chromium
+   bash build.sh
    ```
+   ต้องมี `git`, `node`, `jq`, `patch`, `python` ใน PATH (บน Windows ใช้ Git Bash)
 
 4. ตรวจสอบผลลัพธ์:
    - โฟลเดอร์ผลลัพธ์จะอยู่ที่ `uBOLite.chromium/`
@@ -115,8 +116,10 @@
 | `README-ADHIDER.md` | รายละเอียดการทำงานของ `ad-hider.js` และตัวอย่างการใช้งาน |
 | `README-ISOLATED-BROWSER.md` | คู่มือการรัน Isolated Profile Browser |
 | `TWITCH-VAFT-SETUP.md` | คู่มือเจาะลึกเฉพาะการแก้ Twitch Video Ad ด้วย VAFT scriptlet |
-| `src/make-mv3.windows-patched.sh` | สคริปต์ build หลักที่แก้ปัญหา path ของ MSYS/Windows |
+| `build.sh` | สคริปต์ build หลัก — clone upstream uBlock + ใส่ overlay ของโปรเจกต์ + build + ตรวจผลลัพธ์ |
+| `src/make-mv3.windows-patched.sh` | สคริปต์ build ที่แก้ปัญหา path ของ MSYS/Windows (build.sh เอาไปวางแทน `tools/make-mv3.sh`) |
 | `src/custom-scriptlets/` | แหล่งรวมโค้ด Scriptlet พิเศษที่ bundle เพิ่มเข้ามา |
+| `src/patches/` | patches ที่ใช้กับต้นไม้ upstream และกับผลลัพธ์หลัง build |
 | `Start-Blocked-Browser.cmd` | สคริปต์เปิดรันเบราว์เซอร์แยกโพรไฟล์บน Windows |
 | `patch-rulesets.py` | ตัวช่วยปรับแต่ง DNR ruleset |
 

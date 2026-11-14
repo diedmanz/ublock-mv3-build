@@ -6,10 +6,13 @@ profile-backup-*/
 # ===== Never upload: browser binaries =====
 cft-chrome/
 
-# ===== Build output (rebuild with src/make-mv3.windows-patched.sh) =====
+# ===== Build output (rebuild with build.sh) =====
 uBOLite.chromium/
 uBOLite_vaft/
 uBOLite_adhider/
+
+# ===== Upstream clone used by build.sh =====
+.build/
 
 # ===== Release archives (fetch upstream / rebuild instead) =====
 *.zip
