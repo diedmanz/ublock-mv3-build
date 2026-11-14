@@ -1,6 +1,31 @@
-# คู่มือการติดตั้งและใช้งาน uBlock Origin Lite (MV3) Build Toolkit
+# คู่มือการติดตั้งและใช้งาน uBlock Origin Lite Enhanced (MV3)
 
-ชุดเครื่องมือสร้างและติดตั้งส่วนขยาย **uBlock Origin Lite (MV3)** พร้อม Custom Scriptlet (`twitch-videoad` / `ad-hider` / `ad-gate-skip`) และเครื่องมือทดสอบบน Windows
+**บล็อกโฆษณาเว็บไทย (037-hdd, 123-hdc, animegojos, hubserieshds) + Twitch อัตโนมัติ** สร้างจาก uBlock Origin Lite (MV3) source พร้อม Custom Scriptlets
+
+---
+
+## 🚀 เริ่มใช้งานง่ายๆ (30 วินาที)
+
+### ทางที่ 1: Portable Installer — **ง่ายที่สุด ไม่ต้อง Build**
+
+1. **ดาวน์โหลด** `INSTALL.bat` จาก [Releases](https://github.com/diedmanz/ublock-mv3-build/releases)
+2. **ดับเบิลคลิก** `INSTALL.bat` → รอ 2–5 นาที (ดาวน์โหลด Chrome + Extension)
+3. **Desktop จะมี shortcut:** "uBlock Origin Lite Enhanced"
+4. **คลิกเปิด** → ครั้งแรกจะถาม **"Allow User Scripts"** → กด **Allow** (ครั้งเดียวตลอดชีพ)
+5. **เสร็จแล้ว** เปิดเว็บสตรีมมิ่งไทย โฆษณาจะหายเอง
+
+> **ติดตั้งที่:** `%LOCALAPPDATA%\uBOLite-Enhanced\` (Chrome แบบ portable + Extension + โปรไฟล์แยก) — **Chrome หลักของคุณไม่ถูกแตะ**
+
+---
+
+### ทางที่ 2: โหลดใน Chrome/Edge ปกติ
+
+1. เปิด `chrome://extensions` (หรือ `edge://extensions`)
+2. เปิด **Developer mode** (มุมขวาบน)
+3. **Load unpacked** → เลือก: `%LOCALAPPDATA%\uBOLite-Enhanced\runtime\uBOLite_adhider`
+   *(หรือโฟลเดอร์ `uBOLite_adhider` จาก repo นี้)*
+4. ไอคอน Extension → **Dashboard** → **Settings** → **Backup** → **Restore** → เลือก `uBOL-config.json`
+5. **Details** → เปิด **"Allow User Scripts"** (จำเป็น, ทำครั้งเดียว)
 
 ---
 
@@ -67,7 +92,7 @@
    ต้องมี `git`, `node`, `jq`, `patch`, `python` ใน PATH (บน Windows ใช้ Git Bash)
 
 4. ตรวจสอบผลลัพธ์:
-   - โฟลเดอร์ผลลัพธ์จะอยู่ที่ `uBOLite.chromium/`
+   - โฟลเดอร์ผลลัพธ์จะอยู่ที่ `uBOLite_adhider/` (หรือ path ที่สั่งเพิ่มเติม)
    - ไฟล์ `manifest.json` ภายในโฟลเดอร์ต้องมีรายการ `rule_resources` (ไม่ใช่ `[]`)
 
 ---
