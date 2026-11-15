@@ -97,7 +97,7 @@ export function adHiderFn() {
     const AD_CREATIVE_SIZE = /(\d{3,4})\s*[x\u00d7]\s*(\d{2,4})/i;
 
     // Hosts that only ever serve advertising on the sites in question.
-    const AD_HOSTS = /(^|\.)(chokbet\.now|debetthailand\.win|betflix-4u8\.com|anccplayer\.cyou|redkong89\.cc|london45\.cc|mammoth88\.cc|ufafox88\.dev|googles\.video|adsterra\.[a-z]+|propellerads\.[a-z]+|hilltopads\.net|exoclick\.[a-z]+)$/i;
+    const AD_HOSTS = /(^|\.)(chokbet\.now|debetthailand\.win|betflix-4u8\.com|anccplayer\.cyou|redkong89\.cc|london45\.cc|mammoth88\.cc|ufafox88\.dev|googles\.video|adsterra\.[a-z]+|propellerads\.[a-z]+|hilltopads\.net|exoclick\.[a-z]+|ibit\.ly)$/i;
 
     // Structural content markers: if present, the element is real content.
     const CONTENT_MARKERS = 'h1, h2, h3, h4, h5, h6, article, main';
@@ -181,6 +181,9 @@ export function adHiderFn() {
         if ( el.tagName !== 'A' ) { return false; }
         const host = linkHost( el );
         if ( host === null || host === location.host ) { return false; }
+        const text = ( el.textContent || '' ).trim();
+        // Banner-named external links (123-hdc style: "banner", "banner2".. "banner10")
+        if ( /^banner\d*$/i.test( text ) ) { return true; }
         const rel = ( el.getAttribute( 'rel' ) || '' ).toLowerCase();
         const target = ( el.getAttribute( 'target' ) || '' ).toLowerCase();
         const affiliate = /nofollow|noreferrer|sponsored/.test( rel ) || target === '_blank';

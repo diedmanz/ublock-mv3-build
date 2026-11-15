@@ -32,6 +32,45 @@
         ".bannerrow",
         "img.banner"
       ]
+    ],
+    [
+      "123-hdc.com",
+      [
+        "#ads-rot",
+        "#adst",
+        "#bt-ads",
+        "#bt-ads-mini",
+        "#bt-ads-mini2",
+        ".bannerrow",
+        "img.banner",
+        "a[href*=\"ibit.ly\"]"
+      ]
+    ],
+    [
+      "037-hdd.com",
+      [
+        "#ads-rot",
+        "#adst",
+        "#bt-ads",
+        "#bt-ads-mini",
+        "#bt-ads-mini2",
+        ".bannerrow",
+        "img.banner",
+        "a[href*=\"ibit.ly\"]"
+      ]
+    ],
+    [
+      "9.9nung.com",
+      [
+        "#ads-rot",
+        "#adst",
+        "#bt-ads",
+        "#bt-ads-mini",
+        "#bt-ads-mini2",
+        ".bannerrow",
+        "img.banner",
+        "a[href*=\"ibit.ly\"]"
+      ]
     ]
   ],
   "sandboxFilters": [

@@ -1,0 +1,13 @@
+--- a/platform/mv3/extension/js/scripting/css-api.js
++++ b/platform/mv3/extension/js/scripting/css-api.js
+@@ -30,6 +30,10 @@
+                 sheet.replaceSync(css);
+                 document.adoptedStyleSheets.push(sheet);
+             }
++            // Some frames are injected without extension API access
++            // (sandboxed iframes, fenced frames): there chrome.runtime is
++            // undefined and calling it throws an uncaught TypeError.
++            if ( typeof chrome === 'undefined' || typeof chrome.runtime === 'undefined' ) { return; }
+             chrome.runtime.sendMessage({
+                 what: 'insertCSS',
+                 css,

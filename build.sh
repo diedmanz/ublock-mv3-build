@@ -78,6 +78,10 @@ cp "$REPO_ROOT/src/make-mv3.windows-patched.sh" "$UB_DIR/tools/make-mv3.sh"
 cp "$REPO_ROOT/src/custom-scriptlets/"*.js "$UB_DIR/src/js/resources/"
 # 3. Import the custom scriptlets from uBO's scriptlet registry.
 patch -p1 -d "$UB_DIR/src" < "$REPO_ROOT/src/patches/scriptlets.js.patch"
+# 4. Guard css-api against frames with no extension API access (sandboxed/
+#    opaque-origin iframes) to avoid uncaught sendMessage errors.
+patch --forward -p1 -d "$UB_DIR" < "$REPO_ROOT/src/patches/css-api.patch" \
+    || echo "    (css-api patch already applied)"
 
 step "Building uBOLite (chromium)"
 cd "$UB_DIR"
