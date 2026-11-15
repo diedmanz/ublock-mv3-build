@@ -76,7 +76,7 @@ xcopy /E /I /Y /Q "%SRC%\dist\build\uBOLite.chromium" "%TARGET%\runtime\uBOLite_
 if not exist "%TARGET%\runtime\uBOLite_adhider\manifest.json" (
     echo [i] No fresh build found. Downloading pre-built release...
     powershell -NoProfile -Command ^
-        "try { Invoke-WebRequest -Uri 'https://github.com/%~1/releases/latest/download/uBOLite_adhider.zip' -OutFile '%TEMP%\prebuilt.zip'; ^
+        "try { Invoke-WebRequest -Uri 'https://github.com/diedmanz/ublock-mv3-build/releases/latest/download/uBOLite_adhider.zip' -OutFile '%TEMP%\prebuilt.zip'; ^
                Expand-Archive -Path '%TEMP%\prebuilt.zip' -DestinationPath '%TARGET%\runtime' -Force } ^
          catch { Write-Host 'Pre-built not available: $_' }"
 )
