@@ -55,8 +55,8 @@
 choco install nodejs-lts python jq git -y
 
 # clone + build
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
-cd YOUR-REPO
+git clone https://github.com/diedmanz/ublock-mv3-build.git
+cd ublock-mv3-build
 bash tools/make-mv3.sh chromium
 # ผลลัพธ์อยู่ที่ dist/build/uBOLite.chromium/
 ```

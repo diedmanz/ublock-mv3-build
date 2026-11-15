@@ -9,7 +9,7 @@ setlocal EnableDelayedExpansion
 
 set "TARGET=%LOCALAPPDATA%\uBOLite-Enhanced"
 set "REPO=https://github.com/%~1/archive/refs/heads/main.zip"
-if "%~1"=="" set "REPO=https://github.com/YOUR-USERNAME/YOUR-REPO/archive/refs/heads/main.zip"
+if "%~1"=="" set "REPO=https://github.com/diedmanz/ublock-mv3-build/archive/refs/heads/main.zip"
 
 echo ============================================================
 echo  uBlock Origin Lite Enhanced - Installer
